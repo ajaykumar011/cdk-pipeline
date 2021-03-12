@@ -6,7 +6,7 @@ import * as path from 'path';
 /**
  * A stack for our simple Lambda-powered web service
  */
-export class CdkpipelinesDemoPipelineStack extends Stack {
+export class CdkpipelinesDemoStack extends Stack {
   /**
    * The URL of the API Gateway endpoint, for use in the integ tests
    */

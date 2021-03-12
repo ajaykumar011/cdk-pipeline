@@ -1,3 +1,4 @@
+import { CdkpipelinesDemoStage } from './cdkpipelines-demo-stage';
 import * as codepipeline from '@aws-cdk/aws-codepipeline';
 import * as codepipeline_actions from '@aws-cdk/aws-codepipeline-actions';
 import { Construct, SecretValue, Stack, StackProps } from '@aws-cdk/core';
@@ -23,8 +24,8 @@ export class CdkpipelinesDemoPipelineStack extends Stack {
         actionName: 'GitHub',
         output: sourceArtifact,
         oauthToken: SecretValue.secretsManager('github-token'),
-        owner: 'OWNER',
-        repo: 'REPO',
+        owner: 'ajaykumar011',
+        repo: 'cdk-pipeline',
       }),
 
        // How it will be built and synthesized
@@ -39,5 +40,11 @@ export class CdkpipelinesDemoPipelineStack extends Stack {
 
     // This is where we add the application stages
     // ...
+
+    // This is where we add the application stages
+    pipeline.addApplicationStage(new CdkpipelinesDemoStage(this, 'DevEnv', {
+          env: { account: '171709546961', region: 'us-east-1' }
+        }));
+
   }
 }
