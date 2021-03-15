@@ -9,6 +9,6 @@ export class S3Stage extends Stage {
   constructor(scope: Construct, id: string, props?: StageProps) {
     super(scope, id, props);
 
-    new S3Stack(this, 'S3BucketStack');
+    const service = new S3Stack(this, 'S3BucketStack');
   }
 }

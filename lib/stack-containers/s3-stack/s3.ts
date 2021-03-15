@@ -15,6 +15,7 @@ export class S3Stack extends Stack {
     super(scope, id, props);
 
     const bucket = new s3.Bucket(this, 'MyBucket', {
+      bucketName: 'somabucket-demo',
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
     this.myBucket = bucket;

@@ -16,6 +16,7 @@ export class LambdaStack extends Stack {
 
     // The Lambda function that contains the functionality
     const handler = new lambda.Function(this, 'Lambda', {
+      functionName: 'sslambdacdkdeployed_fn',
       runtime: lambda.Runtime.NODEJS_14_X,
       handler: 'handler.handler',
       code: lambda.Code.fromAsset(path.resolve(__dirname, 'lambda')),

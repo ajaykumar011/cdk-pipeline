@@ -1,11 +1,11 @@
-import { LambdaStage } from './stack-containers/lambda-stack/lambda-stage';
-import { S3Stage } from './stack-containers/s3-stack/s3-stage';
 import * as codepipeline from '@aws-cdk/aws-codepipeline';
 import * as codepipeline_actions from '@aws-cdk/aws-codepipeline-actions';
 import { Construct, SecretValue, Stack, StackProps } from '@aws-cdk/core';
 import { CdkPipeline, SimpleSynthAction } from "@aws-cdk/pipelines";
 import * as ssm from '@aws-cdk/aws-ssm';
 import { CodeBuildAction } from '@aws-cdk/aws-codepipeline-actions';
+import { LambdaStage } from './stack-containers/lambda-stack/lambda-stage';
+import { S3Stage } from './stack-containers/s3-stack/s3-stage';
 
 /**
  * The stack that defines the application pipeline

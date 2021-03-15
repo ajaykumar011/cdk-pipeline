@@ -8,11 +8,11 @@ const app = new cdk.App();
 
 //Once the cdk pipeline is ready
 
-new CdkPipelineStack(app, 'CdkpipelinesStack', {
-    env: { account: '171709546961', region: 'us-east-1' },
-  });
+//new CdkPipelineStack(app, 'CdkpipelinesStack', { env: { account: '171709546961', region: 'us-east-1' },});
+new CdkPipelineStack(app, 'CdkpipelinesStack');
+
 
 app.synth();
 
 
-//new CdkpipelinesDemoStack(app, 'CdkpipelinesDemoStack');
+//new CdkpipelinesDemoStack(app, 'CdkpipelinesStack');
