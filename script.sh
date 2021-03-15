@@ -87,3 +87,13 @@ cdk bootstrap --bootstrap-customer-key --cloudformation-execution-policies 'arn:
 cdk bootstrap --no-bootstrap-customer-key --cloudformation-execution-policies 'arn:aws:iam::aws:policy/AdministratorAccess' aws://171709546961/us-east-1
 cdk bootstrap --no-bootstrap-customer-key  --cloudformation-execution-policies 'arn:aws:iam::aws:policy/AdministratorAccess' --trust 171709546961 aws://719087115411/us-east-1
 cdk bootstrap --no-bootstrap-customer-key --cloudformation-execution-policies 'arn:aws:iam::aws:policy/AdministratorAccess' --trust 171709546961 aws://263877540751/us-east-1
+
+
+
+# After first push- This creates a  CDK pipeline
+
+git clone <clone id>
+# 'npm run build' first to make sure there are no typos 
+npm run build
+git commit -am 'Add PreProd stage'
+git push
