@@ -1,14 +1,41 @@
 # Welcome to your CDK TypeScript project!
 
-This is a blank project for TypeScript development with CDK.
+Cdk bootstra in each region
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app..
+# Go to Each Account and and run the bootsrapping 
+# Make sure your AWS organisation have the required policy of ECR, S3, CF etc.
+cdk init
 
-## Useful commands
+cdk bootstrap --no-bootstrap-customer-key --cloudformation-execution-policies 'arn:aws:iam::aws:policy/AdministratorAccess' aws://171709xxx61/us-east-1
+cdk bootstrap --no-bootstrap-customer-key  --cloudformation-execution-policies 'arn:aws:iam::aws:policy/AdministratorAccess' --trust 1717xx6961 aws://719xxx15411/us-east-1
+cdk bootstrap --no-bootstrap-customer-key --cloudformation-execution-policies 'arn:aws:iam::aws:policy/AdministratorAccess' --trust 1717xx961 aws://2638xxx0751/us-east-1
 
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+
+
+# After first push This creates a  CDK pipeline
+
+`*git clone <clone id>`
+`*cdk bootstrap aws://<current_ac>>//<region>`
+`*cdk ls`
+`*cdk deploy`
+
+this Pipeline will fail for the first time.
+
+## Now add /enable in the  pipeline-stack.ts on the top
+
+`import { LambdaStage } from './stack-containers/lambda-stack/lambda-stage';`
+`import { S3Stage } from './stack-containers/s3-stack/s3-stage';`
+
+## Comment the below line in bin/cdkpipelines.skel.ts
+
+//new CdkPipelineStack(app, 'CdkpipelinesStack', {
+//     env: { account: '171709546961', region: 'us-east-1' },
+//   });
+
+## Enable or edit the lines in pipeline-stack.ts
+
+//pipeline.addApplicationStage(new LambdaStage(this, 'LambdaStage', {env: { account: '171709546961', region: 'us-east-1' }}));
+//pipeline.addApplicationStage(new S3Stage(this, 'S3Stage', {env: { account: '171709546961', region: 'us-east-1' }}));
+
+# Run the command after above changes
+git add . && git commit -m "stackupdate" && git push 

@@ -65,35 +65,39 @@ git add . && git commit -m "update" && git push origin main
 # In CI/CD account (Shared Ac)
 export CDK_NEW_BOOTSTRAP=1
 
-
+#In Shared Account
 cdk bootstrap --bootstrap-customer-key --cloudformation-execution-policies 'arn:aws:iam::aws:policy/AdministratorAccess' aws://171709546961/us-east-1
-#cdk bootstrap --bootstrap-customer-key --cloudformation-execution-policies 'arn:aws:iam::aws:policy/AdministratorAccess' aws://171709546961/us-west-2
 
 # In Dev account
 cdk bootstrap --bootstrap-customer-key --cloudformation-execution-policies 'arn:aws:iam::aws:policy/AdministratorAccess' --trust 171709546961 aws://719087115411/us-east-1
-#cdk bootstrap --bootstrap-customer-key --cloudformation-execution-policies 'arn:aws:iam::aws:policy/AdministratorAccess' --trust 171709546961 aws://719087115411/us-west-2
 
 # In Prod account
 cdk bootstrap --bootstrap-customer-key --cloudformation-execution-policies 'arn:aws:iam::aws:policy/AdministratorAccess' --trust 171709546961 aws://263877540751/us-east-1
-#cdk bootstrap --bootstrap-customer-key --cloudformation-execution-policies 'arn:aws:iam::aws:policy/AdministratorAccess' --trust 171709546961 aws://263877540751/us-west-2
 
 
 #--no-bootstrap-customer-key
 
-# Go to Each Account and and run the bootsrapping 
-#Make sure your AWS organisation have the required policy of ECR, S3, CF etc.
+# # Go to Each Account and and run the bootsrapping 
+# #Make sure your AWS organisation have the required policy of ECR, S3, CF etc.
 
 
-cdk bootstrap --no-bootstrap-customer-key --cloudformation-execution-policies 'arn:aws:iam::aws:policy/AdministratorAccess' aws://171709546961/us-east-1
-cdk bootstrap --no-bootstrap-customer-key  --cloudformation-execution-policies 'arn:aws:iam::aws:policy/AdministratorAccess' --trust 171709546961 aws://719087115411/us-east-1
-cdk bootstrap --no-bootstrap-customer-key --cloudformation-execution-policies 'arn:aws:iam::aws:policy/AdministratorAccess' --trust 171709546961 aws://263877540751/us-east-1
+# cdk bootstrap --no-bootstrap-customer-key --cloudformation-execution-policies 'arn:aws:iam::aws:policy/AdministratorAccess' aws://171709546961/us-east-1
+# cdk bootstrap --no-bootstrap-customer-key  --cloudformation-execution-policies 'arn:aws:iam::aws:policy/AdministratorAccess' --trust 171709546961 aws://719087115411/us-east-1
+# cdk bootstrap --no-bootstrap-customer-key --cloudformation-execution-policies 'arn:aws:iam::aws:policy/AdministratorAccess' --trust 171709546961 aws://263877540751/us-east-1
 
 
 
 # After first push- This creates a  CDK pipeline
+################################################################################################################################
 
 git clone <clone id>
 # 'npm run build' first to make sure there are no typos 
+cdk bootstrap aws://<current_ac>>//<region>
+cdk deploy
+
+#this will fail for the first time. 
+
+
 npm run build
 git commit -am 'Add PreProd stage'
 git push
