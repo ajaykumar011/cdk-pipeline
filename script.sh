@@ -22,7 +22,7 @@ aws sts get-caller-identity
 
 sudo pip install git-remote-codecommit
 git --version
-git checkout -b main 
+git checkout -b main
 git branch -d master  # to deleter master branch
 
 git config --global user.email "ajay011.sharma@hotmail.com"

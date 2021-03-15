@@ -1,4 +1,4 @@
-import { CdkpipelinesDemoStage } from './cdkpipelines-demo-stage';
+import { CdkpipelinesDemoStage } from './lambda-stage1';
 import * as codepipeline from '@aws-cdk/aws-codepipeline';
 import * as codepipeline_actions from '@aws-cdk/aws-codepipeline-actions';
 import { Construct, SecretValue, Stack, StackProps } from '@aws-cdk/core';
@@ -40,7 +40,6 @@ export class CdkpipelinesDemoPipelineStack extends Stack {
        synthAction: SimpleSynthAction.standardNpmSynth({
          sourceArtifact,
          cloudAssemblyArtifact,
-         
          // We need a build step to compile the TypeScript Lambda
          buildCommand: 'npm run build'
        }),
@@ -50,9 +49,9 @@ export class CdkpipelinesDemoPipelineStack extends Stack {
     // ...
 
     // This is where we add the application stages
-    pipeline.addApplicationStage(new CdkpipelinesDemoStage(this, 'DevEnv', {
-          env: { account: '171709546961', region: 'us-east-1' }
-        }));
+    // pipeline.addApplicationStage(new CdkpipelinesDemoStage(this, 'DevEnv', {
+    //       env: { account: '171709546961', region: 'us-east-1' }
+    //     }));
 
   }
 }
