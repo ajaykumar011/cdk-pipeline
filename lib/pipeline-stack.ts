@@ -48,8 +48,8 @@ export class CdkPipelineStack extends Stack {
     });
 
     // This is where we add the application stages. Enable this line and git push again to check
-    pipeline.addApplicationStage(new LambdaStage(this, 'LambdaStage', {env: { account: '171709546961', region: 'us-east-1' }}));
-    pipeline.addApplicationStage(new S3Stage(this, 'S3Stage', {env: { account: '171709546961', region: 'us-east-1' }}));
+    pipeline.addApplicationStage(new LambdaStage(this, 'LambdaStage', {env: { account: '719087115411', region: 'us-east-1' }}));
+    pipeline.addApplicationStage(new S3Stage(this, 'S3Stage', {env: { account: '263877540751', region: 'us-east-1' }}));
 
   }
 }

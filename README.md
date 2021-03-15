@@ -26,16 +26,10 @@ this Pipeline will fail for the first time.
 `import { LambdaStage } from './stack-containers/lambda-stack/lambda-stage';`
 `import { S3Stage } from './stack-containers/s3-stack/s3-stage';`
 
-## Comment the below line in bin/cdkpipelines.skel.ts
-
-//new CdkPipelineStack(app, 'CdkpipelinesStack', {
-//     env: { account: '171709546961', region: 'us-east-1' },
-//   });
-
 ## Enable or edit the lines in pipeline-stack.ts
 
-//pipeline.addApplicationStage(new LambdaStage(this, 'LambdaStage', {env: { account: '171709546961', region: 'us-east-1' }}));
-//pipeline.addApplicationStage(new S3Stage(this, 'S3Stage', {env: { account: '171709546961', region: 'us-east-1' }}));
+`pipeline.addApplicationStage(new LambdaStage(this, 'LambdaStage', {env: { account: '171709546961', region: 'us-east-1' }}));`
+`pipeline.addApplicationStage(new S3Stage(this, 'S3Stage', {env: { account: '171709546961', region: 'us-east-1' }}));`
 
 # Run the command after above changes
-git add . && git commit -m "stackupdate" && git push 
+git add . && git commit -m "stackupdate" && git push
