@@ -9,6 +9,6 @@ export class EFSStage extends Stage {
   constructor(scope: Construct, id: string, props?: StageProps) {
     super(scope, id, props);
 
-    const service = new EFSStack(this, 'EFSBucketStack');
+    const service = new EFSStack(this, 'EFSStack');
   }
 }
