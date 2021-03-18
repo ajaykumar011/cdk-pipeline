@@ -21,6 +21,18 @@ export class EFSStack extends Stack {
     super(scope, id, props);
 
     const stack = cdk.Stack.of(this);
+    if (this.region === 'us-east-1') {
+      this.node.setContext(`availability-zones:account=${this.account}:region=us-east-1`, [
+        'us-east-1a',
+        'us-east-1b'
+      ]);
+    };
+    if (this.region === 'us-west-2') {
+      this.node.setContext(`availability-zones:account=${this.account}:region=us-west-2`, [
+        'us-east-2a',
+        'us-east-2b'
+      ]);
+    };
 
     // The code that defines your stack goes here
     const myvpc = new ec2.Vpc(this, 'VPCid', {maxAzs: 2, cidr: "172.16.0.0/16",
