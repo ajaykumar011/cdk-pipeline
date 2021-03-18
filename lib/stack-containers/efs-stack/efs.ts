@@ -29,8 +29,8 @@ export class EFSStack extends Stack {
     };
     if (this.region === 'us-west-2') {
       this.node.setContext(`availability-zones:account=${this.account}:region=us-west-2`, [
-        'us-east-2a',
-        'us-east-2b'
+        'us-west-2a',
+        'us-west-2b'
       ]);
     };
 
