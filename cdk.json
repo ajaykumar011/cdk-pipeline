@@ -8,6 +8,13 @@
     "@aws-cdk/aws-secretsmanager:parseOwnedSecretName": true,
     "@aws-cdk/aws-kms:defaultKeyPolicies": true,
     "@aws-cdk/aws-s3:grantWriteWithoutAcl": true,
-    "@aws-cdk/core:newStyleStackSynthesis": true
+    "@aws-cdk/core:newStyleStackSynthesis": true,
+    "availability-zones:account=171709546961:region=us-east-1": ["us-east-1a", "us-east-1b"],
+    "availability-zones:account=719087115411:region=us-east-1": ["us-east-1a", "us-east-1b"],
+    "availability-zones:account=263877540751:region=us-east-1": ["us-east-1a", "us-east-1b"],
+    "availability-zones:account=171709546961:region=us-west-2": ["us-west-2a", "us-west-2b"],
+    "availability-zones:account=719087115411:region=us-west-2": ["us-west-2a", "us-west-2b"],
+    "availability-zones:account=263877540751:region=us-west-2": ["us-west-2a", "us-west-2b"]
+
   }
 }
