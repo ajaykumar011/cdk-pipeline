@@ -31,7 +31,7 @@ export class CdkPipelineStack extends Stack {
     const myvpc = ec2.Vpc.fromVpcAttributes(this, 'mycorpvpc', {
       vpcId: 'vpc-0ea9df83e5abca880',
       availabilityZones: ['us-east-1a', 'us-east-1b'],
-      privateSubnetIds: ['subnet-0c897deac488dd832', 'subnet-05f1017c99b6823f7'], //If you vpc has NAT
+      isolatedSubnetIds: ['subnet-0c897deac488dd832', 'subnet-05f1017c99b6823f7'], //If you vpc has NAT
       //publicSubnetIds: ['subnet-01fdaee98e1031d59', 'subnet-0e7423fba027047f2'],
       isolatedSubnetRouteTableIds: ['rtb-095cf2b93e11a61d3', 'rtb-0ab9187d7eb7450c5'] // If you hvae no NAT and using Private subnet
       //publicSubnetRouteTableIds: ['rtb-04290cb937189269d', 'rtb-0247f02cbca0b8802']
