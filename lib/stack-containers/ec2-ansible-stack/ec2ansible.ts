@@ -88,40 +88,6 @@ export class Ec2AnsibleStack extends Stack {
 
     // new cdk.CfnOutput(this, "AnsibleInstance", {value: ansibleinstnace.instancePublicIp});
 
-    const ansibleBuild = new codebuild.PipelineProject(this, "ansible-pipeline", {
-      description: "Ansible Build",
-      projectName: "Ansible-poc-build",
-      vpc: myvpc,
-      environment: {buildImage:codebuild.LinuxBuildImage.AMAZON_LINUX_2_3,},
-      buildSpec: codebuild.BuildSpec.fromObject({
-        version: '0.2',
-        phases: {
-          install: {
-            commands: [
-            'yum update -y',
-            'aws --version',
-            'aws sts get-caller-identity',
-            'export AWS_DEFAULT_REGION=us-east-1',
-            'python --version',
-            'pip --version',
-            'pip list',
-            'pip install ansible==2.9',
-            'ansible --version',
-            'ansible-galaxy collection install amazon.aws',
-            'ansible localhost -a "which python3"'
-            ]
-          }
-        }
-      })
-    })
-
-
-
-
-
-
-
-
 
 
 
