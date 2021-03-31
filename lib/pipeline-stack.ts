@@ -59,49 +59,49 @@ export class CdkPipelineStack extends Stack {
        }),
     });
 
-    // const setupServerStage = pipeline.addStage("setup-ec2-server");
-    // const ansibleBuild = new codebuild.PipelineProject(this, "ansible-pipeline", {
-    //   description: "Ansible Build",
-    //   projectName: "Ansible-poc-build2",
-    //   vpc: myvpc,
-    //   environment: {buildImage:codebuild.LinuxBuildImage.AMAZON_LINUX_2_3,},
-    //   buildSpec: codebuild.BuildSpec.fromObject({
-    //     version: '0.2',
-    //     phases: {
-    //       install: {
-    //         commands: [
-    //         'yum update -y',
-    //         'aws --version',
-    //         'aws sts get-caller-identity',
-    //         'export AWS_DEFAULT_REGION=us-east-1',
-    //         'python --version',
-    //         'pip --version',
-    //         'pip list',
-    //         'pip install ansible==2.9',
-    //         'ansible --version',
-    //         'ansible-galaxy collection install amazon.aws',
-    //         'ansible localhost -a "which python3"'
-    //         ]
-    //       },
-    //       build: {
-    //         commands: [
-    //           'ls'
-    //         ]
-    //       }
-    //     },
-    //     artifacts: {
-    //       files: [
-    //         '**/*',
-    //       ],
-    //     }
-    //   }),
-    // })
+    const setupServerStage = pipeline.addStage("setup-ec2-server");
+    const ansibleBuild = new codebuild.PipelineProject(this, "ansible-pipeline", {
+      description: "Ansible Build",
+      projectName: "Ansible-poc-build2",
+      vpc: myvpc,
+      environment: {buildImage:codebuild.LinuxBuildImage.AMAZON_LINUX_2_3,},
+      buildSpec: codebuild.BuildSpec.fromObject({
+        version: '0.2',
+        phases: {
+          install: {
+            commands: [
+            'yum update -y',
+            'aws --version',
+            'aws sts get-caller-identity',
+            'export AWS_DEFAULT_REGION=us-east-1',
+            'python --version',
+            'pip --version',
+            'pip list',
+            'pip install ansible==2.9',
+            'ansible --version',
+            'ansible-galaxy collection install amazon.aws',
+            'ansible localhost -a "which python3"'
+            ]
+          },
+          build: {
+            commands: [
+              'ls'
+            ]
+          }
+        },
+        artifacts: {
+          files: [
+            '**/*',
+          ],
+        }
+      }),
+    })
 
-    // setupServerStage.addActions(new codepipeline_actions.CodeBuildAction({
-    //   actionName: "run-ansible-playbook",
-    //   project: ansibleBuild,
-    //   input:sourceArtifact
-    // }));
+    setupServerStage.addActions(new codepipeline_actions.CodeBuildAction({
+      actionName: "run-ansible-playbook",
+      project: ansibleBuild,
+      input:sourceArtifact
+    }));
 
     // This is where we add the application stages. Enable this line and git push again to check
     // Shared: 171709546961, Dev: 719087115411, Prod: 263877540751
