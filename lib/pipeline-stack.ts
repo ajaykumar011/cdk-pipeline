@@ -28,14 +28,14 @@ export class CdkPipelineStack extends Stack {
     //       version: 1,
     //      });
 
-    const myvpc = ec2.Vpc.fromVpcAttributes(this, 'mycorpvpc', {
-      vpcId: 'vpc-0ea9df83e5abca880',
-      availabilityZones: ['us-east-1a', 'us-east-1b'],
-      isolatedSubnetIds: ['subnet-0c897deac488dd832', 'subnet-05f1017c99b6823f7'], //If you vpc has NAT
-      //publicSubnetIds: ['subnet-01fdaee98e1031d59', 'subnet-0e7423fba027047f2'],
-      isolatedSubnetRouteTableIds: ['rtb-095cf2b93e11a61d3', 'rtb-0ab9187d7eb7450c5'] // If you hvae no NAT and using Private subnet
-      //publicSubnetRouteTableIds: ['rtb-04290cb937189269d', 'rtb-0247f02cbca0b8802']
-      });
+    // const myvpc = ec2.Vpc.fromVpcAttributes(this, 'mycorpvpc', {
+    //   vpcId: 'vpc-0ea9df83e5abca880',
+    //   availabilityZones: ['us-east-1a', 'us-east-1b'],
+    //   isolatedSubnetIds: ['subnet-0c897deac488dd832', 'subnet-05f1017c99b6823f7'], //If you vpc has NAT
+    //   //publicSubnetIds: ['subnet-01fdaee98e1031d59', 'subnet-0e7423fba027047f2'],
+    //   isolatedSubnetRouteTableIds: ['rtb-095cf2b93e11a61d3', 'rtb-0ab9187d7eb7450c5'] // If you hvae no NAT and using Private subnet
+    //   //publicSubnetRouteTableIds: ['rtb-04290cb937189269d', 'rtb-0247f02cbca0b8802']
+    //   });
 
     const pipeline = new CdkPipeline(this, 'Pipeline', {
       // The pipeline name
@@ -62,54 +62,54 @@ export class CdkPipelineStack extends Stack {
        }),
     });
 
-    const setupServerStage = pipeline.addStage("setup-ec2-server");
-    const ansibleBuild = new codebuild.PipelineProject(this, "ansible-pipeline", {
-      description: "Ansible Build",
-      projectName: "Ansible-poc-build2",
-      vpc: myvpc,
-      environment: {buildImage:codebuild.LinuxBuildImage.AMAZON_LINUX_2_3,},
-      buildSpec: codebuild.BuildSpec.fromObject({
-        version: '0.2',
-        phases: {
-          install: {
-            commands: [
-            'yum update -y',
-            'aws --version',
-            'aws sts get-caller-identity',
-            'export AWS_DEFAULT_REGION=us-east-1',
-            'python --version',
-            'pip --version',
-            'pip list',
-            'pip install ansible==2.9',
-            'ansible --version',
-            'ansible-galaxy collection install amazon.aws',
-            'ansible localhost -a "which python3"'
-            ]
-          },
-          build: {
-            commands: [
-              'ls'
-            ]
-          }
-        },
-        artifacts: {
-          files: [
-            '**/*',
-          ],
-        }
-      }),
-    })
+    // const setupServerStage = pipeline.addStage("setup-ec2-server");
+    // const ansibleBuild = new codebuild.PipelineProject(this, "ansible-pipeline", {
+    //   description: "Ansible Build",
+    //   projectName: "Ansible-poc-build2",
+    //   vpc: myvpc,
+    //   environment: {buildImage:codebuild.LinuxBuildImage.AMAZON_LINUX_2_3,},
+    //   buildSpec: codebuild.BuildSpec.fromObject({
+    //     version: '0.2',
+    //     phases: {
+    //       install: {
+    //         commands: [
+    //         'yum update -y',
+    //         'aws --version',
+    //         'aws sts get-caller-identity',
+    //         'export AWS_DEFAULT_REGION=us-east-1',
+    //         'python --version',
+    //         'pip --version',
+    //         'pip list',
+    //         'pip install ansible==2.9',
+    //         'ansible --version',
+    //         'ansible-galaxy collection install amazon.aws',
+    //         'ansible localhost -a "which python3"'
+    //         ]
+    //       },
+    //       build: {
+    //         commands: [
+    //           'ls'
+    //         ]
+    //       }
+    //     },
+    //     artifacts: {
+    //       files: [
+    //         '**/*',
+    //       ],
+    //     }
+    //   }),
+    // })
 
-    setupServerStage.addActions(new codepipeline_actions.CodeBuildAction({
-      actionName: "run-ansible-playbook",
-      project: ansibleBuild,
-      input: sourceArtifact,
-      }));
+    // setupServerStage.addActions(new codepipeline_actions.CodeBuildAction({
+    //   actionName: "run-ansible-playbook",
+    //   project: ansibleBuild,
+    //   input: sourceArtifact,
+    //   }));
 
     // This is where we add the application stages. Enable this line and git push again to check
     // Shared: 171709546961, Dev: 719087115411, Prod: 263877540751
     //pipeline.addApplicationStage(new LambdaStage(this, 'LambdaStage', {env: { account: '719087115411', region: 'us-east-1' }}));
-    // pipeline.addApplicationStage(new S3Stage(this, 'S3Stage', {env: { account: '263877540751', region: 'us-east-1' }}));
+    pipeline.addApplicationStage(new S3Stage(this, 'S3Stage', {env: { account: '263877540751', region: 'us-east-1' }}));
     //pipeline.addApplicationStage(new EFSStage(this, 'EFSStage', {env: { account: '719087115411', region: 'us-east-1' }}));
     //pipeline.addApplicationStage(new Ec2AnsibleStage(this, 'Ec2AnsibleStage', {env: { account: '171709546961', region: 'us-east-1' }}));
 
