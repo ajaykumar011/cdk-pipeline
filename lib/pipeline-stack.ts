@@ -63,10 +63,18 @@ export class CdkPipelineStack extends Stack {
     });
 
     const setupServerStage = pipeline.addStage("setup-ec2-server");
+    const cbrole = new Role(this, "MyCodebuildRole", {
+      assumedBy: new ServicePrincipal("codebuild.amazonaws.com"),
+      managedPolicies: [
+        ManagedPolicy.fromAwsManagedPolicyName('AWSCodeBuildAdminAccess')
+      ]});
+    cbrole.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName('AmazonEC2FullAccess'));
+
     const ansibleBuild = new codebuild.PipelineProject(this, "ansible-pipeline", {
       description: "Ansible Build",
       projectName: "Ansible-poc-build2",
       //vpc: myvpc,
+      role: cbrole,
       environment: {buildImage:codebuild.LinuxBuildImage.AMAZON_LINUX_2_3,},
       buildSpec: codebuild.BuildSpec.fromObject({
         version: '0.2',
