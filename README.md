@@ -1,6 +1,6 @@
 # Welcome to your CDK TypeScript project!
 
-Cdk bootstra in each region
+Cdk bootstrap in each region
 
 # Go to Each Account and and run the bootsrapping 
 # Make sure your AWS organisation have the required policy of ECR, S3, CF etc.
@@ -33,3 +33,7 @@ this Pipeline will fail for the first time.
 
 # Run the command after above changes
 git add . && git commit -m "stackupdate" && git push
+
+
+## Please note cdk pipeline does not destroy its application till now. 
+Hence if you want to destroy any application, you may need to destroy them manully from destinatin cloudformation either via console or CLI or SDK.
