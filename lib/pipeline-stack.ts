@@ -7,6 +7,7 @@ import { CodeBuildAction } from '@aws-cdk/aws-codepipeline-actions';
 import { LambdaStage } from './stack-containers/lambda-stack/lambda-stage';
 import { S3Stage } from './stack-containers/s3-stack/s3-stage';
 import { EFSStage } from './stack-containers/efs-stack/efs-stage';
+import { Ec2AnsibleStage } from './stack-containers/ec2-ansible-stack/ec2ansible-stage';
 
 /**
  * The stack that defines the application pipeline
@@ -53,6 +54,7 @@ export class CdkPipelineStack extends Stack {
     //pipeline.addApplicationStage(new LambdaStage(this, 'LambdaStage', {env: { account: '719087115411', region: 'us-east-1' }}));
     pipeline.addApplicationStage(new S3Stage(this, 'S3Stage', {env: { account: '263877540751', region: 'us-east-1' }}));
     //pipeline.addApplicationStage(new EFSStage(this, 'EFSStage', {env: { account: '719087115411', region: 'us-east-1' }}));
+    pipeline.addApplicationStage(new Ec2AnsibleStage(this, 'Ec2AnsibleStage', {env: { account: '171709546961', region: 'us-east-1' }}));
 
   }
 }

@@ -1,16 +1,8 @@
 import * as cdk from '@aws-cdk/core'
-import * as apigw from '@aws-cdk/aws-apigateway';
-import * as lambda from '@aws-cdk/aws-lambda';
 import * as s3 from '@aws-cdk/aws-s3';
 import { CfnOutput, Construct, Stack, StackProps } from '@aws-cdk/core';
-import * as path from 'path';
-import * as efs from '@aws-cdk/aws-efs';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import { SecurityGroup } from '@aws-cdk/aws-ec2';
-import { Aws, FileSystem } from '@aws-cdk/core';
-import * as ssm from '@aws-cdk/aws-ssm';
-import { env } from 'process';
-import { readFileSync } from 'fs';
 const ruleCdk = require('@aws-cdk/aws-events');
 const targets = require('@aws-cdk/aws-events-targets');
 import {Role, ServicePrincipal, ManagedPolicy} from '@aws-cdk/aws-iam';
