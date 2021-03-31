@@ -62,7 +62,7 @@ export class CdkPipelineStack extends Stack {
     const setupServerStage = pipeline.addStage("setup-ec2-server");
     const ansibleBuild = new codebuild.PipelineProject(this, "ansible-pipeline", {
       description: "Ansible Build",
-      projectName: "Ansible-poc-build",
+      projectName: "Ansible-poc-build2",
       vpc: myvpc,
       environment: {buildImage:codebuild.LinuxBuildImage.AMAZON_LINUX_2_3,},
       buildSpec: codebuild.BuildSpec.fromObject({
