@@ -9,7 +9,8 @@ import { S3Stage } from './stack-containers/s3-stack/s3-stage';
 import { EFSStage } from './stack-containers/efs-stack/efs-stage';
 import { Ec2AnsibleStage } from './stack-containers/ec2-ansible-stack/ec2ansible-stage';
 import {Role, ServicePrincipal, ManagedPolicy} from '@aws-cdk/aws-iam';
-import codebuild = require("@aws-cdk/aws-codebuild")
+import codebuild = require("@aws-cdk/aws-codebuild");
+import * as iam from '@aws-cdk/aws-iam';
 import { VpcLink } from '@aws-cdk/aws-apigateway';
 import ec2 = require("@aws-cdk/aws-ec2")
 import { CrossAcRoleStage } from './stack-containers/cross-ac-role-stack/crossacrole-stage';
@@ -70,6 +71,7 @@ export class CdkPipelineStack extends Stack {
       description: "Ansible Build",
       projectName: "Ansible-poc-build2",
       //vpc: myvpc,
+      role: iam.Role.fromRoleArn(this, 'roleforcrossac', 'arn:aws:iam::171709546961:role/ec2-describle-role-from-sharedac-receiveassumer-role', {mutable: false}),
       environment: {buildImage:codebuild.LinuxBuildImage.AMAZON_LINUX_2_3,},
       buildSpec: codebuild.BuildSpec.fromObject({
         version: '0.2',
@@ -84,9 +86,19 @@ export class CdkPipelineStack extends Stack {
             'pip --version',
             'pip list',
             'pip install ansible==2.9',
+            'pip install pywinrm[credssp]',
             'ansible --version',
             'ansible-galaxy collection install amazon.aws',
-            'ansible localhost -a "which python3"'
+            'ansible localhost -a "which python3"',
+            'aws sts get-caller-identity',
+            'aws sts get-session-token',
+            'mkdir -p ansible2 && cd ansible2',
+            'cp -rf assets/ansible2/* .',
+            'pwd && ls',
+            'printenv',
+            'aws ec2 describe-instances --region us-east-1'
+            //'ansible-playbook win_ping.yml'
+
             ]
           },
           build: {

@@ -11,7 +11,7 @@ import * as codepipeline from '@aws-cdk/aws-codepipeline';
 import codebuild = require("@aws-cdk/aws-codebuild")
 import { VpcLink } from '@aws-cdk/aws-apigateway';
 import { readFileSync } from 'fs';
-
+import * as path from 'path';
 /**
  * A stack for our simple S3 with export
  */
@@ -79,11 +79,13 @@ export class Ec2WindowsStack extends Stack {
 
          //Windows Instance
          const win_key_name = "win-dev-ac";
-         const win_user_data = readFileSync('./assets/win_userdata/userdata.ps1', 'utf-8');
+         const win_user_data = readFileSync(path.resolve(__filename, 'userdata.ps1'), 'utf-8');
+         //const win_user_data = readFileSync('./assets/win_userdata/userdata.ps1', 'utf-8');
          const windows_ami = ec2.MachineImage.latestWindows(ec2.WindowsVersion.WINDOWS_SERVER_2019_ENGLISH_FULL_BASE);
 
           const wininstance = new ec2.Instance(this, 'WinInstanceid', {
                                   vpc: myvpc,
+                                  role: instanceiamrole,
                                   instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE2, ec2.InstanceSize.MICRO),
                                   machineImage: windows_ami,
                                   allowAllOutbound: true,
@@ -91,7 +93,7 @@ export class Ec2WindowsStack extends Stack {
                                   vpcSubnets: {subnets: myvpc.publicSubnets},
                                   availabilityZone: az1,
                                   securityGroup: ec2sg,
-                                  //userData: ec2.UserData.custom(win_user_data),
+                                  userData: ec2.UserData.custom(win_user_data),
                                   blockDevices: [{
                                     deviceName: '/dev/xvdb',
                                     volume: ec2.BlockDeviceVolume.ebs(50, {
