@@ -78,7 +78,7 @@ export class CdkPipelineStack extends Stack {
         phases: {
           install: {
             commands: [
-            'yum update -y',
+            //'yum update -y',
             'aws --version',
             'aws sts get-caller-identity',
             'export AWS_DEFAULT_REGION=us-east-1',
@@ -91,7 +91,6 @@ export class CdkPipelineStack extends Stack {
             'ansible-galaxy collection install amazon.aws',
             'ansible localhost -a "which python3"',
             'aws sts get-caller-identity',
-            'aws sts get-session-token',
             'mkdir -p ansible2 && cd ansible2',
             'cp -rf assets/ansible2/* .',
             'pwd && ls',
