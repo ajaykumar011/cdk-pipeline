@@ -33,8 +33,8 @@ export class CrossAcRoleAssumeStack extends Stack {
     };
 
     // The code that defines your stack goes here
-    const assumerole = new iam.Role(this, "PeerPassRole", {
-      roleName: 'ec2-describle-role-for-sharedac', //this will be used on the assumer role  account
+    const assumerole = new iam.Role(this, "AssumeReceiverRole", {
+      roleName: 'ec2-describle-role-from-sharedac-receiveassumer-role', //this will be used on the assumer role  account
       assumedBy: new iam.ServicePrincipal('codebuild.amazonaws.com')
     });
      assumerole.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'));
