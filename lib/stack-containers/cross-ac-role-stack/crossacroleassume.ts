@@ -38,6 +38,7 @@ export class CrossAcRoleAssumeStack extends Stack {
       assumedBy: new iam.ServicePrincipal('codebuild.amazonaws.com')
     });
      assumerole.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'));
+     assumerole.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('AWSCodeBuildDeveloperAccess'));
      assumerole.addToPolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
