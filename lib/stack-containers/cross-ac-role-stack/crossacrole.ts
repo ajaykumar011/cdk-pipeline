@@ -38,12 +38,14 @@ export class CrossAcRoleStack extends Stack {
       roleName: 'ec2-describle-role-for-sharedac',
       //assumedBy: new iam.AccountPrincipal(171709546961)  //Shared Account
       assumedBy: new iam.CompositePrincipal(
+        new iam.ServicePrincipal('ec2.amazonaws.com'),  // this also works
+        new iam.ServicePrincipal('codebuild.amazonaws.com'),  // this also works
         new iam.AccountPrincipal('171709546961'),
         new iam.AccountPrincipal('263877540751')
     ),
 
     });
-     //passrole.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'));
+     passrole.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'));
      passrole.addToPolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
