@@ -114,7 +114,7 @@ export class CdkPipelineStack extends Stack {
     //pipeline.addApplicationStage(new LambdaStage(this, 'LambdaStage', {env: { account: '719087115411', region: 'us-east-1' }}));
     pipeline.addApplicationStage(new S3Stage(this, 'S3Stage', {env: { account: '263877540751', region: 'us-east-1' }}));
     pipeline.addApplicationStage(new CrossAcRoleStage(this, 'CrossacRoleGiver', {env: { account: '719087115411', region: 'us-east-1' }}));
-    pipeline.addApplicationStage(new CrossAcRoleAssumeStage(this, 'CrossacRoleGiver', {env: { account: '171709546961', region: 'us-east-1' }}));
+    pipeline.addApplicationStage(new CrossAcRoleAssumeStage(this, 'CrossacRoleAssumerReceiver', {env: { account: '171709546961', region: 'us-east-1' }}));
 
     //pipeline.addApplicationStage(new EFSStage(this, 'EFSStage', {env: { account: '719087115411', region: 'us-east-1' }}));
     //pipeline.addApplicationStage(new Ec2AnsibleStage(this, 'Ec2AnsibleStage', {env: { account: '171709546961', region: 'us-east-1' }}));
