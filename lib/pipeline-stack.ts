@@ -91,8 +91,9 @@ export class CdkPipelineStack extends Stack {
             'ansible-galaxy collection install amazon.aws',
             'ansible localhost -a "which python3"',
             'aws sts get-caller-identity',
-            'cp -rf assets/ansible2/* .',
-            'cd ansible2',
+            'mkdir -p ansible-cb',
+            'cp -rf assets/ansible2/* ansible-cb/',
+            'cd ansible-cb',
             'pwd && ls',
             'printenv',
             'aws ec2 describe-instances --region us-east-1'
