@@ -14,6 +14,7 @@ import { VpcLink } from '@aws-cdk/aws-apigateway';
 import ec2 = require("@aws-cdk/aws-ec2")
 import { CrossAcRoleStage } from './stack-containers/cross-ac-role-stack/crossacrole-stage';
 import { CrossAcRoleAssumeStage } from './stack-containers/cross-ac-role-stack/crossacroleassume-stage';
+import { Ec2WindowsStage } from './stack-containers/ec2-windows-stack/ec2windows-stage';
 
 /**
  * The stack that defines the application pipeline
@@ -115,6 +116,7 @@ export class CdkPipelineStack extends Stack {
     pipeline.addApplicationStage(new S3Stage(this, 'S3Stage', {env: { account: '263877540751', region: 'us-east-1' }}));
     pipeline.addApplicationStage(new CrossAcRoleStage(this, 'CrossacRoleGiver', {env: { account: '719087115411', region: 'us-east-1' }}));
     pipeline.addApplicationStage(new CrossAcRoleAssumeStage(this, 'CrossacRoleAssumerReceiver', {env: { account: '171709546961', region: 'us-east-1' }}));
+    pipeline.addApplicationStage(new Ec2WindowsStage(this, 'Ec2WindowsStack', {env: { account: '719087115411', region: 'us-east-1' }}));
 
     //pipeline.addApplicationStage(new EFSStage(this, 'EFSStage', {env: { account: '719087115411', region: 'us-east-1' }}));
     //pipeline.addApplicationStage(new Ec2AnsibleStage(this, 'Ec2AnsibleStage', {env: { account: '171709546961', region: 'us-east-1' }}));
