@@ -5,11 +5,9 @@ import * as ec2 from '@aws-cdk/aws-ec2';
 import { SecurityGroup } from '@aws-cdk/aws-ec2';
 const ruleCdk = require('@aws-cdk/aws-events');
 const targets = require('@aws-cdk/aws-events-targets');
-import {Role, ServicePrincipal, ManagedPolicy} from '@aws-cdk/aws-iam';
-import * as codepipeline_actions from '@aws-cdk/aws-codepipeline-actions';
-import * as codepipeline from '@aws-cdk/aws-codepipeline';
-import codebuild = require("@aws-cdk/aws-codebuild")
-import { VpcLink } from '@aws-cdk/aws-apigateway';
+import codebuild = require("@aws-cdk/aws-codebuild");
+import * as iam from '@aws-cdk/aws-iam'
+
 
 /**
  * A stack for our simple S3 with export
@@ -35,29 +33,18 @@ export class CrossAcRoleAssumeStack extends Stack {
     };
 
     // The code that defines your stack goes here
-    const instanceiamrole = new Role(this, "MyInstanceRole", {
-            assumedBy: new ServicePrincipal("ec2.amazonaws.com"),
-            managedPolicies: [
-              ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMManagedInstanceCore')
-            ]});
-          instanceiamrole.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName('AmazonS3FullAccess'));
-          instanceiamrole.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMFullAccess'));
-
-
-    // const ansible_user_data = readFileSync('./ansibleuserdata.sh', 'utf-8');
-    // const ansible_key_name = "mykey";
-    // const ansibleinstnace = new ec2.Instance(this, 'AnsibleInst1', {
-    //       vpc: myvpc,
-    //       instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE2,
-    //       ec2.InstanceSize.MICRO),
-    //       machineImage: amznLinux_ami,
-    //       allowAllOutbound: true,
-    //       securityGroup: instancesg,
-    //       userData: ec2.UserData.custom(ansible_user_data),
-    //       role: instanceiamrole,
-    //       keyName: ansible_key_name});
-
-    // new cdk.CfnOutput(this, "AnsibleInstance", {value: ansibleinstnace.instancePublicIp});
+    const assumerole = new iam.Role(this, "PeerPassRole", {
+      roleName: 'ec2-describle-role-for-sharedac', //this will be used on the assumer role  account
+      assumedBy: new iam.ServicePrincipal('codebuild.amazonaws.com')
+    });
+     assumerole.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'));
+     assumerole.addToPolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        resources: ["arn:aws:iam::719087115411:role/ec2-describle-role-for-sharedac"],
+        actions: ["sts:AssumeRole"]
+      })
+    );
 
 
 

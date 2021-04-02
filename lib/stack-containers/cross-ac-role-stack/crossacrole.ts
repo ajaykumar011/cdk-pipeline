@@ -35,7 +35,7 @@ export class CrossAcRoleStack extends Stack {
     // The code that defines your stack goes here
     //Peer role
     const passrole = new iam.Role(this, "PeerPassRole", {
-      roleName: 'ec2-describle-role-for-sharedac',
+      roleName: 'ec2-describle-role-for-sharedac', //this will be used on the assumer role  account
       //assumedBy: new iam.AccountPrincipal(171709546961)  //Shared Account
       assumedBy: new iam.CompositePrincipal(
         new iam.ServicePrincipal('ec2.amazonaws.com'),  // this also works
