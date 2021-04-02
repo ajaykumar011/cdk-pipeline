@@ -79,7 +79,7 @@ export class Ec2WindowsStack extends Stack {
 
          //Windows Instance
          const win_key_name = "win-dev-ac";
-         const win_user_data = readFileSync(path.resolve(__filename, 'userdata.ps1'), 'utf-8');
+         const win_user_data = readFileSync(path.resolve(__dirname, 'userdata.ps1'), 'utf-8');
          //const win_user_data = readFileSync('./assets/win_userdata/userdata.ps1', 'utf-8');
          const windows_ami = ec2.MachineImage.latestWindows(ec2.WindowsVersion.WINDOWS_SERVER_2019_ENGLISH_FULL_BASE);
 
