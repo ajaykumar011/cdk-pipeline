@@ -139,13 +139,13 @@ export class CdkPipelineStack extends Stack {
         ]
       }));
 
-
     setupServerStage.addActions(new codepipeline_actions.CodeBuildAction({
       actionName: "run-ansible-playbook",
       project: ansibleBuild,
       input: sourceArtifact,
       //runOrder: 1
     }));
+
 
     // This is where we add the application stages. Enable this line and git push again to check
     // Shared: 171709546961, Dev(non-prod): 719087115411, Prod: 263877540751
