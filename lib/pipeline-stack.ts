@@ -71,7 +71,7 @@ export class CdkPipelineStack extends Stack {
       description: "Ansible Build",
       projectName: "Ansible-poc-build2",
       //vpc: myvpc,
-      //role: iam.Role.fromRoleArn(this, 'roleforcrossac', 'arn:aws:iam::171709546961:role/ec2-describle-role-from-sharedac-receiveassumer-role', {mutable: false}),
+      role: iam.Role.fromRoleArn(this, 'roleforcrossac', 'arn:aws:iam::171709546961:role/ec2-describle-role-from-sharedac-receiveassumer-role', {mutable: false}),
       environment: {buildImage:codebuild.LinuxBuildImage.AMAZON_LINUX_2_3,},
       buildSpec: codebuild.BuildSpec.fromObject({
         version: '0.2',
@@ -96,7 +96,7 @@ export class CdkPipelineStack extends Stack {
             'cd ansible-cb',
             'pwd && ls',
             'printenv',
-            //'aws ec2 describe-instances --region us-east-1'
+            'aws ec2 describe-instances --region us-east-1'
             //'ansible-playbook win_ping.yml'
 
             ]
