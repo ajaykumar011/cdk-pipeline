@@ -12,5 +12,15 @@ export AWS_SESSION_TOKEN=$(echo "${TEMP_ROLE}" | jq -r ".Credentials.SessionToke
 echo $AWS_ACCESS_KEY_ID
 echo $AWS_SECRET_ACCESS_KEY
 echo $AWS_SESSION_TOKEN
-echo "Getting Details from other account assuming the ec2 readonly access is available
+echo "Getting Details from other account assuming the ec2 readonly access is available"
 aws ec2 describe-instances --region us-east-1
+
+
+# Other Method (mostly used with Docker)
+
+aws sts get-caller-identity
+mkdir -p ~/.aws/ && touch ~/.aws/config
+echo "[profile buildprofile]" > ~/.aws/config
+echo "arn:aws:iam::719087115411:role/cross_ac_ec2s3_readonly_accessto_otherac" >> ~/.aws/config
+echo "credential_source = Ec2InstanceMetadata" >> ~/.aws/config
+aws sts get-caller-identity --profile buildprofile

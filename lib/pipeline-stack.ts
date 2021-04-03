@@ -106,19 +106,26 @@ export class CdkPipelineStack extends Stack {
             'cp -rf assets/ansible2/* ansible-cb/',
             'cd ansible-cb',
             'pwd && ls',
-            'printenv',
-            'account_id=171709546961',
-            'ASSUME_ROLE_ARN="arn:aws:iam::171709546961:role/Assume_Role_Permssion_for_Cb_to_assumerole"',
-            'TEMP_ROLE=`aws sts assume-role --role-arn $ASSUME_ROLE_ARN --role-session-name test`',
-            'export TEMP_ROLE',
-            'echo $TEMP_ROLE',
-            'export AWS_ACCESS_KEY_ID=$(echo "${TEMP_ROLE}" | jq -r ".Credentials.AccessKeyId")',
-            'export AWS_SECRET_ACCESS_KEY=$(echo "${TEMP_ROLE}" | jq -r ".Credentials.SecretAccessKey")',
-            'export AWS_SESSION_TOKEN=$(echo "${TEMP_ROLE}" | jq -r ".Credentials.SessionToken")',
-            'echo $AWS_ACCESS_KEY_ID',
-            'echo $AWS_SECRET_ACCESS_KEY',
-            'echo $AWS_SESSION_TOKEN',
-            'aws ec2 describe-instances --region us-east-1'
+            //'printenv',
+            // 'account_id=171709546961',
+            // 'ASSUME_ROLE_ARN="arn:aws:iam::171709546961:role/Assume_Role_Permssion_for_Cb_to_assumerole"',
+            // 'TEMP_ROLE=`aws sts assume-role --role-arn $ASSUME_ROLE_ARN --role-session-name test`',
+            // 'export TEMP_ROLE',
+            // 'echo $TEMP_ROLE',
+            // 'export AWS_ACCESS_KEY_ID=$(echo "${TEMP_ROLE}" | jq -r ".Credentials.AccessKeyId")',
+            // 'export AWS_SECRET_ACCESS_KEY=$(echo "${TEMP_ROLE}" | jq -r ".Credentials.SecretAccessKey")',
+            // 'export AWS_SESSION_TOKEN=$(echo "${TEMP_ROLE}" | jq -r ".Credentials.SessionToken")',
+            // 'echo $AWS_ACCESS_KEY_ID',
+            // 'echo $AWS_SECRET_ACCESS_KEY',
+            // 'echo $AWS_SESSION_TOKEN',
+            // 'aws ec2 describe-instances --region us-east-1'
+            'aws sts get-caller-identity',
+            'mkdir -p ~/.aws/ && touch ~/.aws/config',
+            'echo "[profile buildprofile]" > ~/.aws/config',
+            'echo "arn:aws:iam::719087115411:role/cross_ac_ec2s3_readonly_accessto_otherac" >> ~/.aws/config',
+            'echo "credential_source = Ec2InstanceMetadata" >> ~/.aws/config',
+            'aws sts get-caller-identity --profile buildprofile'
+
             //'ansible-playbook win_ping.yml'
 
             ]
@@ -137,16 +144,17 @@ export class CdkPipelineStack extends Stack {
       }),
     });
 
-    ansibleBuild.addToRolePolicy(new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        resources: ["*"],
-        actions: [
-        "sts:AssumeRole",
-        "sts:GetAccessKeyInfo",
-        "sts:GetCallerIdentity",
-        "sts:GetSessionToken"
-        ]
-      }));
+    //Not
+    // ansibleBuild.addToRolePolicy(new iam.PolicyStatement({
+    //     effect: iam.Effect.ALLOW,
+    //     resources: ["*"],
+    //     actions: [
+    //     "sts:AssumeRole",
+    //     "sts:GetAccessKeyInfo",
+    //     "sts:GetCallerIdentity",
+    //     "sts:GetSessionToken"
+    //     ]
+    //   }));
 
     setupServerStage.addActions(new codepipeline_actions.CodeBuildAction({
       actionName: "run-ansible-playbook",
