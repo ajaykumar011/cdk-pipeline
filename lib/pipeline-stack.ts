@@ -43,6 +43,7 @@ export class CdkPipelineStack extends Stack {
 
     const pipeline = new CdkPipeline(this, 'Pipeline', {
       // The pipeline name
+
       pipelineName: 'MyServicePipeline',
       cloudAssemblyArtifact,
 
@@ -124,7 +125,14 @@ export class CdkPipelineStack extends Stack {
           ],
         }
       }),
-    })
+    });
+
+    ansibleBuild.addToRolePolicy(new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        resources: ["*"],
+        actions: ["sts:AssumeRole"]
+      }));
+
 
     setupServerStage.addActions(new codepipeline_actions.CodeBuildAction({
       actionName: "run-ansible-playbook",
