@@ -27,6 +27,8 @@ export class CdkPipelineStack extends Stack {
     const sourceArtifact = new codepipeline.Artifact();
     const cloudAssemblyArtifact = new codepipeline.Artifact();
 
+
+
     // get the secureString if you do not want constly kms
     // const MyGitHubToken = ssm.StringParameter.fromSecureStringParameterAttributes(this,'MyGitHubToken', {
     //       parameterName: 'github-token',
@@ -62,6 +64,14 @@ export class CdkPipelineStack extends Stack {
        synthAction: SimpleSynthAction.standardNpmSynth({
          sourceArtifact,
          cloudAssemblyArtifact,
+      // Use this to customize and a permissions required for the build and synth
+        rolePolicyStatements: [
+          new iam.PolicyStatement({
+            actions: ['sts:AssumeRole', 'sts:GetServiceBearerToken', 'sts:GetAccessKeyInfo', 'sts:GetCallerIdentity','sts:GetSessionToken' ],
+            resources: ['*'],
+          }),
+        ],
+
          // We need a build step to compile the TypeScript Lambda
          buildCommand: 'npm run build'
          //buildCommand: 'npm run build && npm test'
