@@ -78,17 +78,42 @@ export class CdkPipelineStack extends Stack {
        }),
     });
 
-    const buildStage = pipeline.addStage('BuildStage');
+    // const buildStage = pipeline.addStage('BuildStage');
+    // const shellScriptAction = new ShellScriptAction({
+    //   actionName: "shellScriptAction",
+    //   commands: [
+    //     "echo foo"
+    //   ],
+    //   additionalArtifacts: [sourceArtifact],
+    //   runOrder: buildStage.nextSequentialRunOrder()
+    // });
+
+    // buildStage.addActions(shellScriptAction);
+
+    // shellScriptAction.project.addToRolePolicy(new iam.PolicyStatement({
+    //   effect: iam.Effect.ALLOW,
+    //   actions: [
+    //     "sts:AssumeRole",
+    //     "sts:GetAccessKeyInfo",
+    //     "sts:GetCallerIdentity",
+    //     "sts:GetSessionToken"
+    //   ],
+    //   resources: ["*"]
+    // }));
+
+
+
+    const setupServerStage = pipeline.addStage("setup-ec2-server");
     const shellScriptAction = new ShellScriptAction({
       actionName: "shellScriptAction",
       commands: [
         "echo foo"
       ],
       additionalArtifacts: [sourceArtifact],
-      runOrder: buildStage.nextSequentialRunOrder()
+      runOrder: setupServerStage.nextSequentialRunOrder()
     });
 
-    buildStage.addActions(shellScriptAction);
+    setupServerStage.addActions(shellScriptAction);
 
     shellScriptAction.project.addToRolePolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -102,8 +127,6 @@ export class CdkPipelineStack extends Stack {
     }));
 
 
-
-    const setupServerStage = pipeline.addStage("setup-ec2-server");
     const ansibleBuild = new codebuild.PipelineProject(this, "ansible-pipeline", {
       description: "Ansible Build",
       projectName: "Ansible-poc-build2",
