@@ -129,7 +129,7 @@ export class CdkPipelineStack extends Stack {
 
     ansibleBuild.addToRolePolicy(new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        resources: ["*"],
+        resources: ["arn:aws:iam::171709546961:role/ec2-describle-role-from-sharedac-receiveassumer-role"],
         actions: ["sts:AssumeRole"]
       }));
 
