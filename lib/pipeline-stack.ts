@@ -26,6 +26,7 @@ export class CdkPipelineStack extends Stack {
 
     const sourceArtifact = new codepipeline.Artifact();
     const cloudAssemblyArtifact = new codepipeline.Artifact();
+
     // get the secureString if you do not want constly kms
     // const MyGitHubToken = ssm.StringParameter.fromSecureStringParameterAttributes(this,'MyGitHubToken', {
     //       parameterName: 'github-token',
@@ -98,7 +99,7 @@ export class CdkPipelineStack extends Stack {
             'pwd && ls',
             'printenv',
             'account_id=171709546961',
-            'ASSUME_ROLE_ARN="arn:aws:iam::$account_id:role/ec2-describle-role-from-sharedac-receiveassumer-role"',
+            'ASSUME_ROLE_ARN="arn:aws:iam::171709546961:role/Assume_Role_Permssion_for_Cb_to_assumerole"',
             'TEMP_ROLE=`aws sts assume-role --role-arn $ASSUME_ROLE_ARN --role-session-name test`',
             'export TEMP_ROLE',
             'echo $TEMP_ROLE',
@@ -129,8 +130,13 @@ export class CdkPipelineStack extends Stack {
 
     ansibleBuild.addToRolePolicy(new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        resources: ["arn:aws:iam::171709546961:role/ec2-describle-role-from-sharedac-receiveassumer-role"],
-        actions: ["sts:AssumeRole"]
+        resources: ["*"],
+        actions: [
+        "sts:AssumeRole",
+        "sts:GetAccessKeyInfo",
+        "sts:GetCallerIdentity",
+        "sts:GetSessionToken"
+        ]
       }));
 
 
