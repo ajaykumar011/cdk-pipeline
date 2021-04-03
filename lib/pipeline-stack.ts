@@ -1,7 +1,7 @@
 import * as codepipeline from '@aws-cdk/aws-codepipeline';
 import * as codepipeline_actions from '@aws-cdk/aws-codepipeline-actions';
 import { Construct, SecretValue, Stack, StackProps } from '@aws-cdk/core';
-import { CdkPipeline, SimpleSynthAction } from "@aws-cdk/pipelines";
+import { CdkPipeline, ShellScriptAction, SimpleSynthAction } from "@aws-cdk/pipelines";
 import * as ssm from '@aws-cdk/aws-ssm';
 import { CodeBuildAction } from '@aws-cdk/aws-codepipeline-actions';
 import { LambdaStage } from './stack-containers/lambda-stack/lambda-stage';
@@ -78,6 +78,31 @@ export class CdkPipelineStack extends Stack {
        }),
     });
 
+    const buildStage = pipeline.addStage('BuildStage');
+    const shellScriptAction = new ShellScriptAction({
+      actionName: "shellScriptAction",
+      commands: [
+        "echo foo"
+      ],
+      additionalArtifacts: [sourceArtifact],
+      runOrder: buildStage.nextSequentialRunOrder()
+    });
+
+    buildStage.addActions(shellScriptAction);
+
+    shellScriptAction.project.addToRolePolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: [
+        "sts:AssumeRole",
+        "sts:GetAccessKeyInfo",
+        "sts:GetCallerIdentity",
+        "sts:GetSessionToken"
+      ],
+      resources: ["*"]
+    }));
+
+
+
     const setupServerStage = pipeline.addStage("setup-ec2-server");
     const ansibleBuild = new codebuild.PipelineProject(this, "ansible-pipeline", {
       description: "Ansible Build",
@@ -107,9 +132,8 @@ export class CdkPipelineStack extends Stack {
             'cd ansible-cb',
             'pwd && ls',
             //'printenv',
-            // 'account_id=171709546961',
             // 'ASSUME_ROLE_ARN="arn:aws:iam::171709546961:role/Assume_Role_Permssion_for_Cb_to_assumerole"',
-            // 'TEMP_ROLE=`aws sts assume-role --role-arn $ASSUME_ROLE_ARN --role-session-name test`',
+            // 'TEMP_ROLE=`aws sts assume-role --role-arn $ASSUME_ROLE_ARN --role-session-name test`',cd -
             // 'export TEMP_ROLE',
             // 'echo $TEMP_ROLE',
             // 'export AWS_ACCESS_KEY_ID=$(echo "${TEMP_ROLE}" | jq -r ".Credentials.AccessKeyId")',
@@ -121,10 +145,11 @@ export class CdkPipelineStack extends Stack {
             // 'aws ec2 describe-instances --region us-east-1'
             'aws sts get-caller-identity',
             'mkdir -p ~/.aws/ && touch ~/.aws/config',
-            'echo "[profile buildprofile]" > ~/.aws/config',
+            'echo "[profile buildprofile]" >> ~/.aws/config',
             'echo "arn:aws:iam::719087115411:role/cross_ac_ec2s3_readonly_accessto_otherac" >> ~/.aws/config',
             'echo "credential_source = Ec2InstanceMetadata" >> ~/.aws/config',
-            'aws sts get-caller-identity --profile buildprofile'
+            'aws sts get-caller-identity --profile buildprofile',
+            'cat ~/.aws/config'
 
             //'ansible-playbook win_ping.yml'
 
@@ -144,6 +169,8 @@ export class CdkPipelineStack extends Stack {
       }),
     });
 
+
+
     //Not
     // ansibleBuild.addToRolePolicy(new iam.PolicyStatement({
     //     effect: iam.Effect.ALLOW,
@@ -160,7 +187,7 @@ export class CdkPipelineStack extends Stack {
       actionName: "run-ansible-playbook",
       project: ansibleBuild,
       input: sourceArtifact,
-      //runOrder: 1
+      //runOrder: 1,
     }));
 
 
