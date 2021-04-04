@@ -127,6 +127,7 @@ export class CdkPipelineStack extends Stack {
             'echo $AWS_ACCESS_KEY_ID',
             'echo $AWS_SECRET_ACCESS_KEY',
             'echo $AWS_SESSION_TOKEN',
+            'aws sts get-caller-identity',
             'aws ec2 describe-instances --region us-east-1'
       ],
       additionalArtifacts: [sourceArtifact],
