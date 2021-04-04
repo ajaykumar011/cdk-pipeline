@@ -147,6 +147,7 @@ export class CdkPipelineStack extends Stack {
             'ls',
             'cat group_vars/win',
             'cat hosts',
+            'pip install pyYAML requests setuptools simplejson pyOpenSSL pywinrm',
             'ansible-playbook -vvv -i hosts win_ping.yml'
       ],
       runOrder: setupServerStage.nextSequentialRunOrder()
