@@ -147,7 +147,7 @@ export class CdkPipelineStack extends Stack {
             'ls',
             'cat group_vars/win',
             'cat hosts',
-            'ansible-playbook -i hosts win_ping.yml'
+            //'ansible-playbook -i hosts win_ping.yml'
       ],
       runOrder: setupServerStage.nextSequentialRunOrder()
     });
@@ -163,89 +163,89 @@ export class CdkPipelineStack extends Stack {
       resources: ["*"]
     }));
 
-    const ansibleBuild = new codebuild.PipelineProject(this, "ansible-pipeline", {
-      description: "Ansible Build",
-      projectName: "Ansible-poc-build2",
-      //vpc: myvpc,
-      //role: iam.Role.fromRoleArn(this, 'roleforcrossac', 'arn:aws:iam::171709546961:role/ec2-describle-role-from-sharedac-receiveassumer-role', {mutable: false}),
-      environment: {buildImage:codebuild.LinuxBuildImage.AMAZON_LINUX_2_3, computeType: codebuild.ComputeType.SMALL, privileged: true},
-      buildSpec: codebuild.BuildSpec.fromObject({
-        version: '0.2',
-        phases: {
-          install: {
-            commands: [
-            //'yum update -y',
-            'aws --version',
-            'aws sts get-caller-identity',
-            'export AWS_DEFAULT_REGION=us-east-1',
-            'python --version',
-            'pip --version',
-            'pip list',
-            'pip install ansible==2.9',
-            'pip install pywinrm[credssp]',
-            'ansible --version',
-            'ansible-galaxy collection install amazon.aws',
-            'ansible localhost -a "which python3"',
-            'mkdir -p ansible-cb',
-            'cp -rf assets/ansible2/* ansible-cb/',
-            'cd ansible-cb',
-            'pwd && ls',
-            //'printenv',
-            // 'ASSUME_ROLE_ARN="arn:aws:iam::719087115411:role/cross_ac_ec2s3_readonly_accessto_otherac"',
-            // 'TEMP_ROLE=`aws sts assume-role --role-arn $ASSUME_ROLE_ARN --role-session-name test`',
-            // 'export TEMP_ROLE',
-            // 'echo $TEMP_ROLE',
-            // 'export AWS_ACCESS_KEY_ID=$(echo "${TEMP_ROLE}" | jq -r ".Credentials.AccessKeyId")',
-            // 'export AWS_SECRET_ACCESS_KEY=$(echo "${TEMP_ROLE}" | jq -r ".Credentials.SecretAccessKey")',
-            // 'export AWS_SESSION_TOKEN=$(echo "${TEMP_ROLE}" | jq -r ".Credentials.SessionToken")',
-            // 'echo $AWS_ACCESS_KEY_ID',
-            // 'echo $AWS_SECRET_ACCESS_KEY',
-            // 'echo $AWS_SESSION_TOKEN',
-            // 'aws ec2 describe-instances --region us-east-1'
-            'aws sts get-caller-identity',
-            'mkdir -p ~/.aws/ && touch ~/.aws/config',
-            'echo "[profile buildprofile]" >> ~/.aws/config',
-            'echo "arn:aws:iam::719087115411:role/cross_ac_ec2s3_readonly_accessto_otherac" >> ~/.aws/config',
-            'echo "credential_source = Ec2InstanceMetadata" >> ~/.aws/config',
-            'aws sts get-caller-identity --profile buildprofile',
-            'cat ~/.aws/config'
+    // const ansibleBuild = new codebuild.PipelineProject(this, "ansible-pipeline", {
+    //   description: "Ansible Build",
+    //   projectName: "Ansible-poc-build2",
+    //   //vpc: myvpc,
+    //   //role: iam.Role.fromRoleArn(this, 'roleforcrossac', 'arn:aws:iam::171709546961:role/ec2-describle-role-from-sharedac-receiveassumer-role', {mutable: false}),
+    //   environment: {buildImage:codebuild.LinuxBuildImage.AMAZON_LINUX_2_3, computeType: codebuild.ComputeType.SMALL, privileged: true},
+    //   buildSpec: codebuild.BuildSpec.fromObject({
+    //     version: '0.2',
+    //     phases: {
+    //       install: {
+    //         commands: [
+    //         //'yum update -y',
+    //         'aws --version',
+    //         'aws sts get-caller-identity',
+    //         'export AWS_DEFAULT_REGION=us-east-1',
+    //         'python --version',
+    //         'pip --version',
+    //         'pip list',
+    //         'pip install ansible==2.9',
+    //         'pip install pywinrm[credssp]',
+    //         'ansible --version',
+    //         'ansible-galaxy collection install amazon.aws',
+    //         'ansible localhost -a "which python3"',
+    //         'mkdir -p ansible-cb',
+    //         'cp -rf assets/ansible2/* ansible-cb/',
+    //         'cd ansible-cb',
+    //         'pwd && ls',
+    //         //'printenv',
+    //         // 'ASSUME_ROLE_ARN="arn:aws:iam::719087115411:role/cross_ac_ec2s3_readonly_accessto_otherac"',
+    //         // 'TEMP_ROLE=`aws sts assume-role --role-arn $ASSUME_ROLE_ARN --role-session-name test`',
+    //         // 'export TEMP_ROLE',
+    //         // 'echo $TEMP_ROLE',
+    //         // 'export AWS_ACCESS_KEY_ID=$(echo "${TEMP_ROLE}" | jq -r ".Credentials.AccessKeyId")',
+    //         // 'export AWS_SECRET_ACCESS_KEY=$(echo "${TEMP_ROLE}" | jq -r ".Credentials.SecretAccessKey")',
+    //         // 'export AWS_SESSION_TOKEN=$(echo "${TEMP_ROLE}" | jq -r ".Credentials.SessionToken")',
+    //         // 'echo $AWS_ACCESS_KEY_ID',
+    //         // 'echo $AWS_SECRET_ACCESS_KEY',
+    //         // 'echo $AWS_SESSION_TOKEN',
+    //         // 'aws ec2 describe-instances --region us-east-1'
+    //         'aws sts get-caller-identity',
+    //         'mkdir -p ~/.aws/ && touch ~/.aws/config',
+    //         'echo "[profile buildprofile]" >> ~/.aws/config',
+    //         'echo "arn:aws:iam::719087115411:role/cross_ac_ec2s3_readonly_accessto_otherac" >> ~/.aws/config',
+    //         'echo "credential_source = Ec2InstanceMetadata" >> ~/.aws/config',
+    //         'aws sts get-caller-identity --profile buildprofile',
+    //         'cat ~/.aws/config'
 
-            //'ansible-playbook win_ping.yml'
+    //         //'ansible-playbook win_ping.yml'
 
-            ]
-          },
-          build: {
-            commands: [
-              'ls'
-            ]
-          }
-        },
-        artifacts: {
-          files: [
-            '**/*',
-          ],
-        }
-      }),
-    });
+    //         ]
+    //       },
+    //       build: {
+    //         commands: [
+    //           'ls'
+    //         ]
+    //       }
+    //     },
+    //     artifacts: {
+    //       files: [
+    //         '**/*',
+    //       ],
+    //     }
+    //   }),
+    // });
 
-    //Not Working
-    // ansibleBuild.addToRolePolicy(new iam.PolicyStatement({
-    //     effect: iam.Effect.ALLOW,
-    //     resources: ["*"],
-    //     actions: [
-    //     "sts:AssumeRole",
-    //     "sts:GetAccessKeyInfo",
-    //     "sts:GetCallerIdentity",
-    //     "sts:GetSessionToken"
-    //     ]
-    //   }));
+    // //Not Working
+    // // ansibleBuild.addToRolePolicy(new iam.PolicyStatement({
+    // //     effect: iam.Effect.ALLOW,
+    // //     resources: ["*"],
+    // //     actions: [
+    // //     "sts:AssumeRole",
+    // //     "sts:GetAccessKeyInfo",
+    // //     "sts:GetCallerIdentity",
+    // //     "sts:GetSessionToken"
+    // //     ]
+    // //   }));
 
-    setupServerStage.addActions(new codepipeline_actions.CodeBuildAction({
-      actionName: "run-ansible-playbook",
-      project: ansibleBuild,
-      input: sourceArtifact,
-      //runOrder: 1,
-    }));
+    // setupServerStage.addActions(new codepipeline_actions.CodeBuildAction({
+    //   actionName: "run-ansible-playbook",
+    //   project: ansibleBuild,
+    //   input: sourceArtifact,
+    //   //runOrder: 1,
+    // }));
 
 
     // This is where we add the application stages. Enable this line and git push again to check
