@@ -11,11 +11,13 @@ import { Ec2AnsibleStage } from './stack-containers/ec2-ansible-stack/ec2ansible
 import {Role, ServicePrincipal, ManagedPolicy} from '@aws-cdk/aws-iam';
 import codebuild = require("@aws-cdk/aws-codebuild");
 import * as iam from '@aws-cdk/aws-iam';
-import { VpcLink } from '@aws-cdk/aws-apigateway';
+import { ResponseType, VpcLink } from '@aws-cdk/aws-apigateway';
 import ec2 = require("@aws-cdk/aws-ec2")
 import { CrossAcRoleStage } from './stack-containers/cross-ac-role-stack/crossacrole-stage';
 import { CrossAcRoleAssumeStage } from './stack-containers/cross-ac-role-stack/crossacroleassume-stage';
 import { Ec2WindowsStage } from './stack-containers/ec2-windows-stack/ec2windows-stage';
+import { statSync } from 'fs';
+
 
 /**
  * The stack that defines the application pipeline
@@ -78,6 +80,7 @@ export class CdkPipelineStack extends Stack {
        }),
     });
 
+
     // const buildStage = pipeline.addStage('BuildStage');
     // const shellScriptAction = new ShellScriptAction({
     //   actionName: "shellScriptAction",
@@ -103,11 +106,22 @@ export class CdkPipelineStack extends Stack {
 
 
 
+
+
+
+
+
     const setupServerStage = pipeline.addStage("setup-ec2-server");
     const shellScriptAction = new ShellScriptAction({
       actionName: "shellScriptAction",
       commands: [
-        "echo foo"
+        'aws sts get-caller-identity',
+        'mkdir -p ~/.aws/ && touch ~/.aws/config',
+        'echo "[profile buildprofile]" >> ~/.aws/config',
+        'echo "arn:aws:iam::719087115411:role/cross_ac_ec2s3_readonly_accessto_otherac" >> ~/.aws/config',
+        'echo "credential_source = Ec2InstanceMetadata" >> ~/.aws/config',
+        'aws sts get-caller-identity --profile buildprofile',
+        'cat ~/.aws/config'
       ],
       additionalArtifacts: [sourceArtifact],
       runOrder: setupServerStage.nextSequentialRunOrder()
@@ -125,7 +139,6 @@ export class CdkPipelineStack extends Stack {
       ],
       resources: ["*"]
     }));
-
 
     const ansibleBuild = new codebuild.PipelineProject(this, "ansible-pipeline", {
       description: "Ansible Build",
@@ -220,7 +233,7 @@ export class CdkPipelineStack extends Stack {
     pipeline.addApplicationStage(new S3Stage(this, 'S3Stage', {env: { account: '263877540751', region: 'us-east-1' }}));
     pipeline.addApplicationStage(new CrossAcRoleStage(this, 'CrossacRoleGiver', {env: { account: '719087115411', region: 'us-east-1' }}));
     pipeline.addApplicationStage(new CrossAcRoleAssumeStage(this, 'CrossacRoleAssumerReceiver', {env: { account: '171709546961', region: 'us-east-1' }}));
-    pipeline.addApplicationStage(new Ec2WindowsStage(this, 'Ec2WindowsStack', {env: { account: '719087115411', region: 'us-east-1' }}));
+    //pipeline.addApplicationStage(new Ec2WindowsStage(this, 'Ec2WindowsStack', {env: { account: '719087115411', region: 'us-east-1' }}));
 
     //pipeline.addApplicationStage(new EFSStage(this, 'EFSStage', {env: { account: '719087115411', region: 'us-east-1' }}));
     //pipeline.addApplicationStage(new Ec2AnsibleStage(this, 'Ec2AnsibleStage', {env: { account: '171709546961', region: 'us-east-1' }}));
