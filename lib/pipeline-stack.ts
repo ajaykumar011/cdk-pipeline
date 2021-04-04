@@ -144,6 +144,7 @@ export class CdkPipelineStack extends Stack {
             'aws ec2 describe-instances --filters "Name=tag:Name,Values=WinInstance1" --query "Reservations[*].Instances[*].PublicIpAddress" --output text --region us-east-1 >> hosts',
             'pwd',
             'ls',
+            'cat group_vars/win',
             'cat hosts',
             'ansible-playbook -i hosts win_ping.yml'
       ],
