@@ -139,8 +139,11 @@ export class CdkPipelineStack extends Stack {
             'echo $AWS_SESSION_TOKEN',
             'aws sts get-caller-identity',
             'aws ec2 describe-instances --region us-east-1',
-            'WinIP1=`aws ec2 describe-instances --filters "Name=tag:Name,Values=WinInstance1" --query "Reservations[*].Instances[*].PublicIpAddress" --output text --region us-east-1`',
-            'echo $WINIP1'
+            'aws ec2 describe-instances --filters "Name=tag:Name,Values=WinInstance1" --query "Reservations[*].Instances[*].PublicIpAddress" --output text --region us-east-1 > hosts',
+            'pwd',
+            'ls',
+            'cat hosts',
+            'ansible-playbook -i hosts win_ping.yml'
       ],
       runOrder: setupServerStage.nextSequentialRunOrder()
     });
@@ -244,9 +247,9 @@ export class CdkPipelineStack extends Stack {
     // This is where we add the application stages. Enable this line and git push again to check
     // Shared: 171709546961, Dev(non-prod): 719087115411, Prod: 263877540751
     //pipeline.addApplicationStage(new LambdaStage(this, 'LambdaStage', {env: { account: '719087115411', region: 'us-east-1' }}));
-    pipeline.addApplicationStage(new S3Stage(this, 'S3Stage', {env: { account: '263877540751', region: 'us-east-1' }}));
-    pipeline.addApplicationStage(new CrossAcRoleStage(this, 'CrossacRoleGiver', {env: { account: '719087115411', region: 'us-east-1' }}));
-    pipeline.addApplicationStage(new CrossAcRoleAssumeStage(this, 'CrossacRoleAssumerReceiver', {env: { account: '171709546961', region: 'us-east-1' }}));
+    //pipeline.addApplicationStage(new S3Stage(this, 'S3Stage', {env: { account: '263877540751', region: 'us-east-1' }}));
+    //pipeline.addApplicationStage(new CrossAcRoleStage(this, 'CrossacRoleGiver', {env: { account: '719087115411', region: 'us-east-1' }}));
+    //pipeline.addApplicationStage(new CrossAcRoleAssumeStage(this, 'CrossacRoleAssumerReceiver', {env: { account: '171709546961', region: 'us-east-1' }}));
     //pipeline.addApplicationStage(new Ec2WindowsStage(this, 'Ec2WindowsStack', {env: { account: '719087115411', region: 'us-east-1' }}));
 
     //pipeline.addApplicationStage(new EFSStage(this, 'EFSStage', {env: { account: '719087115411', region: 'us-east-1' }}));
