@@ -2,6 +2,6 @@
 ansible_user: developer
 ansible_password: myP@ssworD1
 ansible_connection: winrm
-#ansible_port: 5989
+ansible_port: 5986
 #ansible_winrm_transport: credssp
 ansible_winrm_server_cert_validation: ignore

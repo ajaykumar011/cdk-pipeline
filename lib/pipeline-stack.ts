@@ -147,7 +147,7 @@ export class CdkPipelineStack extends Stack {
             'ls',
             'cat group_vars/win',
             'cat hosts',
-            //'ansible-playbook -i hosts win_ping.yml'
+            'ansible-playbook -vvv -i hosts win_ping.yml'
       ],
       runOrder: setupServerStage.nextSequentialRunOrder()
     });
