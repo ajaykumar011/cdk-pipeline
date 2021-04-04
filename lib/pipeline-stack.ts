@@ -1,7 +1,7 @@
 import * as codepipeline from '@aws-cdk/aws-codepipeline';
 import * as codepipeline_actions from '@aws-cdk/aws-codepipeline-actions';
 import { Construct, SecretValue, Stack, StackProps } from '@aws-cdk/core';
-import { CdkPipeline, ShellScriptAction, SimpleSynthAction } from "@aws-cdk/pipelines";
+import { CdkPipeline, ShellScriptAction, SimpleSynthAction, StackOutput } from "@aws-cdk/pipelines";
 import * as ssm from '@aws-cdk/aws-ssm';
 import { CodeBuildAction } from '@aws-cdk/aws-codepipeline-actions';
 import { LambdaStage } from './stack-containers/lambda-stack/lambda-stage';
@@ -105,17 +105,27 @@ export class CdkPipelineStack extends Stack {
     //   resources: ["*"]
     // }));
 
-
-
-
-
-
-
-
     const setupServerStage = pipeline.addStage("setup-ec2-server");
-    const shellScriptAction = new ShellScriptAction({
+    const myshellScriptAction = new ShellScriptAction({
       actionName: "shellScriptAction",
+      additionalArtifacts: [sourceArtifact],
+      environment: {buildImage:codebuild.LinuxBuildImage.AMAZON_LINUX_2_3, computeType: codebuild.ComputeType.SMALL, privileged: true},
       commands: [
+            'aws --version',
+            'aws sts get-caller-identity',
+            'export AWS_DEFAULT_REGION=us-east-1',
+            'python --version',
+            'pip --version',
+            'pip list',
+            'pip install ansible==2.9',
+            'pip install pywinrm[credssp]',
+            'ansible --version',
+            'ansible-galaxy collection install amazon.aws',
+            'ansible localhost -a "which python3"',
+            'mkdir -p ansible-cb',
+            'cp -rf assets/ansible2/* ansible-cb/',
+            'cd ansible-cb',
+            'pwd && ls',
             'printenv',
             'ASSUME_ROLE_ARN="arn:aws:iam::719087115411:role/cross_ac_ec2s3_readonly_accessto_otherac"',
             'TEMP_ROLE=`aws sts assume-role --role-arn $ASSUME_ROLE_ARN --role-session-name test`',
@@ -128,15 +138,14 @@ export class CdkPipelineStack extends Stack {
             'echo $AWS_SECRET_ACCESS_KEY',
             'echo $AWS_SESSION_TOKEN',
             'aws sts get-caller-identity',
-            'aws ec2 describe-instances --region us-east-1'
+            'aws ec2 describe-instances --region us-east-1',
+            'WinIP1=`aws ec2 describe-instances --filters "Name=tag:Name,Values=WinInstance1" --query "Reservations[*].Instances[*].PublicIpAddress" --output text --region us-east-1`',
+            'echo $WINIP1'
       ],
-      additionalArtifacts: [sourceArtifact],
       runOrder: setupServerStage.nextSequentialRunOrder()
     });
-
-    setupServerStage.addActions(shellScriptAction);
-
-    shellScriptAction.project.addToRolePolicy(new iam.PolicyStatement({
+    setupServerStage.addActions(myshellScriptAction);
+    myshellScriptAction.project.addToRolePolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: [
         "sts:AssumeRole",
@@ -212,9 +221,7 @@ export class CdkPipelineStack extends Stack {
       }),
     });
 
-
-
-    //Not
+    //Not Working
     // ansibleBuild.addToRolePolicy(new iam.PolicyStatement({
     //     effect: iam.Effect.ALLOW,
     //     resources: ["*"],
