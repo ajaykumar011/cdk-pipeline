@@ -17,6 +17,7 @@ import { CrossAcRoleStage } from './stack-containers/cross-ac-role-stack/crossac
 import { CrossAcRoleAssumeStage } from './stack-containers/cross-ac-role-stack/crossacroleassume-stage';
 import { Ec2WindowsStage } from './stack-containers/ec2-windows-stack/ec2windows-stage';
 import { statSync } from 'fs';
+import { type } from 'os';
 
 
 /**
@@ -115,13 +116,18 @@ export class CdkPipelineStack extends Stack {
     const shellScriptAction = new ShellScriptAction({
       actionName: "shellScriptAction",
       commands: [
-        'aws sts get-caller-identity',
-        'mkdir -p ~/.aws/ && touch ~/.aws/config',
-        'echo "[profile buildprofile]" >> ~/.aws/config',
-        'echo "arn:aws:iam::719087115411:role/cross_ac_ec2s3_readonly_accessto_otherac" >> ~/.aws/config',
-        'echo "credential_source = Ec2InstanceMetadata" >> ~/.aws/config',
-        'aws sts get-caller-identity --profile buildprofile',
-        'cat ~/.aws/config'
+            'printenv',
+            'ASSUME_ROLE_ARN="arn:aws:iam::719087115411:role/cross_ac_ec2s3_readonly_accessto_otherac"',
+            'TEMP_ROLE=`aws sts assume-role --role-arn $ASSUME_ROLE_ARN --role-session-name test`',
+            'export TEMP_ROLE',
+            'echo $TEMP_ROLE',
+            'export AWS_ACCESS_KEY_ID=$(echo "${TEMP_ROLE}" | jq -r ".Credentials.AccessKeyId")',
+            'export AWS_SECRET_ACCESS_KEY=$(echo "${TEMP_ROLE}" | jq -r ".Credentials.SecretAccessKey")',
+            'export AWS_SESSION_TOKEN=$(echo "${TEMP_ROLE}" | jq -r ".Credentials.SessionToken")',
+            'echo $AWS_ACCESS_KEY_ID',
+            'echo $AWS_SECRET_ACCESS_KEY',
+            'echo $AWS_SESSION_TOKEN',
+            'aws ec2 describe-instances --region us-east-1'
       ],
       additionalArtifacts: [sourceArtifact],
       runOrder: setupServerStage.nextSequentialRunOrder()
@@ -145,7 +151,7 @@ export class CdkPipelineStack extends Stack {
       projectName: "Ansible-poc-build2",
       //vpc: myvpc,
       //role: iam.Role.fromRoleArn(this, 'roleforcrossac', 'arn:aws:iam::171709546961:role/ec2-describle-role-from-sharedac-receiveassumer-role', {mutable: false}),
-      environment: {buildImage:codebuild.LinuxBuildImage.AMAZON_LINUX_2_3,},
+      environment: {buildImage:codebuild.LinuxBuildImage.AMAZON_LINUX_2_3, computeType: codebuild.ComputeType.SMALL, privileged: true},
       buildSpec: codebuild.BuildSpec.fromObject({
         version: '0.2',
         phases: {
@@ -168,8 +174,8 @@ export class CdkPipelineStack extends Stack {
             'cd ansible-cb',
             'pwd && ls',
             //'printenv',
-            // 'ASSUME_ROLE_ARN="arn:aws:iam::171709546961:role/Assume_Role_Permssion_for_Cb_to_assumerole"',
-            // 'TEMP_ROLE=`aws sts assume-role --role-arn $ASSUME_ROLE_ARN --role-session-name test`',cd -
+            // 'ASSUME_ROLE_ARN="arn:aws:iam::719087115411:role/cross_ac_ec2s3_readonly_accessto_otherac"',
+            // 'TEMP_ROLE=`aws sts assume-role --role-arn $ASSUME_ROLE_ARN --role-session-name test`',
             // 'export TEMP_ROLE',
             // 'echo $TEMP_ROLE',
             // 'export AWS_ACCESS_KEY_ID=$(echo "${TEMP_ROLE}" | jq -r ".Credentials.AccessKeyId")',
