@@ -104,6 +104,7 @@ export class CdkPipelineStack extends Stack {
     //   ],
     //   resources: ["*"]
     // }));
+    
 
     const setupServerStage = pipeline.addStage("setup-ec2-server");
     const myshellScriptAction = new ShellScriptAction({
