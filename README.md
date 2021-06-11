@@ -27,10 +27,6 @@ this Pipeline will fail for the first time.
 `import { S3Stage } from './stack-containers/s3-stack/s3-stage';`
 
 ## Enable or edit the lines in pipeline-stack.ts
-
-`pipeline.addApplicationStage(new LambdaStage(this, 'LambdaStage', {env: { account: '171709546961', region: 'us-east-1' }}));`
-`pipeline.addApplicationStage(new S3Stage(this, 'S3Stage', {env: { account: '171709546961', region: 'us-east-1' }}));`
-
 # Run the command after above changes
 git add . && git commit -m "stackupdate" && git push
 
